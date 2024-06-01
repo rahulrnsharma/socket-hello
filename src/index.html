@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat App</title>
+  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>Chat App</h1>
+  <div id="messages"></div>
+  <input id="message" type="text" placeholder="Type a message..."/>
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    const socket = io('http://localhost:3000');
+    
+    socket.on('messageToClient', (data) => {
+      const messages = document.getElementById('messages');
+      const message = document.createElement('p');
+      message.textContent = `${data.sender}: ${data.message}`;
+      messages.appendChild(message);
+    });
+
+    function sendMessage() {
+      const input = document.getElementById('message');
+      const message = input.value;
+      socket.emit('messageToServer', { sender: 'User', message: message });
+      input.value = '';
+    }
+  </script>
+</body>
+</html>
